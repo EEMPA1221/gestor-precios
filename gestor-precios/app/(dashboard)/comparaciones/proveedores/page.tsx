@@ -166,7 +166,7 @@ export default function CompararProveedoresPage() {
         ivaRate: (r.ivaRates[r.bestListId!] as any) ?? 'NONE',
         matched: true,
         masterProduct: { id: r.masterProductId, internalName: r.internalName, category: r.category ?? undefined },
-      } as any).filter(i => i.costPrice != null)
+      } as any).filter((i: any) => i.costPrice != null)
       setSelectedItems(items)
     }
   }
