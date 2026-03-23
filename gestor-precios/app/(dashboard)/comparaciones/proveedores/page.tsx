@@ -200,7 +200,7 @@ export default function CompararProveedoresPage() {
                 key={list.id}
                 disabled={disabled}
                 onClick={() => {
-                  if (active) setSelectedIds(prev => prev.filter(i => i !== list.id))
+                  if (active) setSelectedIds(prev => prev.filter((i: any) => i !== list.id))
                   else if (selectedIds.length < 3) setSelectedIds(prev => [...prev, list.id])
                 }}
                 style={{
