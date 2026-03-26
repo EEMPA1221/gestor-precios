@@ -126,18 +126,7 @@ export default async function DashboardPage() {
               padding: '1.25rem',
               transition: 'box-shadow 0.15s, transform 0.15s',
               cursor: 'pointer',
-            }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement
-                el.style.boxShadow = '0 4px 16px rgba(0,0,0,0.08)'
-                el.style.transform = 'translateY(-1px)'
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement
-                el.style.boxShadow = 'none'
-                el.style.transform = 'none'
-              }}
-            >
+            }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                 <div style={{
                   width: 38,
@@ -187,18 +176,7 @@ export default async function DashboardPage() {
                 cursor: 'pointer',
                 transition: 'all 0.15s',
                 background: 'hsl(220 15% 98%)',
-              }}
-                onMouseEnter={e => {
-                  const el = e.currentTarget as HTMLElement
-                  el.style.background = 'hsl(221 89% 97%)'
-                  el.style.borderColor = 'hsl(221 89% 70%)'
-                }}
-                onMouseLeave={e => {
-                  const el = e.currentTarget as HTMLElement
-                  el.style.background = 'hsl(220 15% 98%)'
-                  el.style.borderColor = 'hsl(220 15% 88%)'
-                }}
-              >
+              }}>
                 <div style={{
                   width: 32,
                   height: 32,
@@ -273,10 +251,7 @@ export default async function DashboardPage() {
                     borderBottom: i < recentLists.length - 1 ? '1px solid hsl(220 15% 94%)' : 'none',
                     transition: 'background 0.1s',
                     cursor: 'pointer',
-                  }}
-                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'hsl(220 15% 98%)'}
-                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'white'}
-                  >
+                  }}>
                     <div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 500, color: 'hsl(220 25% 15%)' }}>
                         {(list as any).supplier?.name}
