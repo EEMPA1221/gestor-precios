@@ -55,19 +55,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session: { strategy: 'jwt' },
     trustHost: true,
 })
-trustHost: true,
-})
-})
 
 // Helpers de permisos
 export function canEdit(role: UserRole) {
-  return role === 'ADMIN' || role === 'OPERATOR'
+    return role === 'ADMIN' || role === 'OPERATOR'
 }
 
 export function canAdmin(role: UserRole) {
-  return role === 'ADMIN'
+    return role === 'ADMIN'
 }
 
 export function canDelete(role: UserRole) {
-  return role === 'ADMIN'
+    return role === 'ADMIN'
 }
