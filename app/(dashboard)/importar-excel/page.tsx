@@ -18,7 +18,6 @@ export default function ImportarExcelPage() {
   }
 
   const handleSubir = async () => {
-  const handleSubir = async () => {
   if (!archivo) return
 
   setCargando(true)
