@@ -43,8 +43,10 @@ export default function ImportarPDFPage() {
     setLoading(true)
     try {
       const formData = new FormData()
-      formData.append('file', file)
-      const res = await fetch('/api/import-pdf', { method: 'POST', body: formData })
+formData.append('file', file)
+const isExcel = file.name.endsWith('.xlsx')
+const endpoint = isExcel ? '/api/import-excel' : '/api/import-pdf'
+const res = await fetch(endpoint, { method: 'POST', body: formData })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       setRawText(data.rawText || '')
