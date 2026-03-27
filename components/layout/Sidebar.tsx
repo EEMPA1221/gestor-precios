@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   Truck,
@@ -12,6 +11,7 @@ import {
   Users,
   Settings,
   TrendingUp,
+  Upload,
 } from 'lucide-react'
 import type { UserRole } from '@/types'
 
