@@ -32,42 +32,49 @@ interface ParsedItem {
 function parsePdfText(text: string): ParsedItem[] {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
   const items: ParsedItem[] = []
-  
-  const priceRegex = /\$?\s*(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)/
-  const codeRegex = /^([A-Z0-9]{3,10})\s/
+
+  // Precio: número con punto de miles y coma decimal, precedido por $ opcional
+  // Ej: $3.544,47 o 3.544,47 o $11.212,34
+  const priceRegex = /\$\s*(\d{1,3}(?:\.\d{3})+,\d{2}|\d+,\d{2})/
 
   for (const line of lines) {
     if (line.length < 3) continue
-    if (/^(producto|descripcion|precio|codigo|cant|total)/i.test(line)) continue
+    // Saltar encabezados
+    if (/^(producto|descripcion|precio|codigo|cant|total|6\s*c\/iva)/i.test(line)) continue
 
     const priceMatch = line.match(priceRegex)
     if (!priceMatch) continue
 
+    // Convertir precio: quitar puntos de miles, reemplazar coma por punto
     const rawPrice = priceMatch[1].replace(/\./g, '').replace(',', '.')
     const price = parseFloat(rawPrice)
     if (isNaN(price) || price <= 0) continue
 
+    // El nombre es todo lo que está antes del precio
     const priceIndex = line.indexOf(priceMatch[0])
     let name = line.substring(0, priceIndex).trim()
-    
-    let code: string | undefined
-    const codeMatch = name.match(codeRegex)
-    if (codeMatch) {
-      code = codeMatch[1]
-      name = name.substring(code.length).trim()
-    }
 
+    // Limpiar nombre
     name = name.replace(/\s+/g, ' ').trim()
     if (name.length < 2) continue
+
+    // Intentar extraer presentación del nombre (ej: 12X1500CC, 4x5LTS, 6x250cc)
+    const presentationRegex = /\b(\d+[Xx]\d+(?:CC|ML|LT|LTS|KG|GR|G|L|U|UN)|\d+(?:CC|ML|LT|LTS|KG|GR|G|L|U|UN))\b/i
+    const presentationMatch = name.match(presentationRegex)
+    let presentation: string | undefined
+    if (presentationMatch) {
+      presentation = presentationMatch[0].toUpperCase()
+    }
 
     items.push({
       originalName: name,
       costPrice: price,
-      code,
+      presentation,
       ivaRate: 'NONE',
     })
   }
 
+  // Detectar duplicados
   const seen = new Set<string>()
   return items.map(item => {
     const key = `${item.originalName.toLowerCase()}-${item.costPrice}`
@@ -75,4 +82,4 @@ function parsePdfText(text: string): ParsedItem[] {
     seen.add(key)
     return { ...item, isDuplicate }
   })
-                        }
+}
