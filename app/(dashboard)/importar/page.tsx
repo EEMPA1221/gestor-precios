@@ -249,7 +249,30 @@ export default function ImportarPDFPage() {
             style={{ width: '100%', padding: '9px 12px', border: '1px solid hsl(220 15% 85%)', borderRadius: 8, fontSize: '0.875rem', fontFamily: 'inherit' }} />
         </div>
         <div>
-          <label style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: 6 }}>Archivo PDF</label>
+<div>
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+    <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>Archivo</label>
+    <a href="/api/plantilla-excel" download style={{ fontSize: '0.8rem', color: 'hsl(221 89% 54%)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+      ⬇ Descargar plantilla Excel
+    </a>
+  </div>
+  <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '1.5rem', border: '2px dashed hsl(220 15% 80%)', borderRadius: 10, cursor: 'pointer', background: 'hsl(220 15% 98%)' }}>
+    {file ? (
+      <>
+        <FileText size={28} color="hsl(221 89% 54%)" />
+        <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'hsl(221 89% 40%)' }}>{file.name}</span>
+        <span style={{ fontSize: '0.75rem', color: 'hsl(220 10% 55%)' }}>{(file.size / 1024).toFixed(0)} KB</span>
+      </>
+    ) : (
+      <>
+        <Upload size={28} color="hsl(220 10% 60%)" />
+        <span style={{ fontSize: '0.875rem', color: 'hsl(220 10% 50%)' }}>Tocá para seleccionar PDF o Excel</span>
+        <span style={{ fontSize: '0.75rem', color: 'hsl(220 10% 60%)' }}>.pdf · .xlsx</span>
+      </>
+    )}
+    <input type="file" accept=".pdf,.xlsx" onChange={e => setFile(e.target.files?.[0] || null)} style={{ display: 'none' }} />
+  </label>
+</div>
           <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '1.5rem', border: '2px dashed hsl(220 15% 80%)', borderRadius: 10, cursor: 'pointer', background: 'hsl(220 15% 98%)' }}>
             {file ? (
               <>
