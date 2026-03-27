@@ -27,4 +27,15 @@ export async function GET() {
     iva: 'NONE',
   })
 
-  sheet.getCell('A3').value = 'Reemplazá la fila de ejemplo con tus
+  sheet.getCell('A3').value = 'Reemplaza esta fila con tus productos'
+
+  const buffer = await workbook.xlsx.writeBuffer()
+
+  return new NextResponse(buffer, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="plantilla-precios.xlsx"',
+    },
+  })
+}
