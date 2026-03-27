@@ -28,7 +28,8 @@ const navItems: NavItem[] = [
   { href: '/listas',           label: 'Listas de precios', icon: <FileSpreadsheet size={18} /> },
   { href: '/comparaciones',    label: 'Comparaciones',  icon: <ArrowLeftRight size={18} /> },
   { href: '/simulador',        label: 'Simulador',      icon: <Calculator size={18} /> },
-  { href: '/historial',        label: 'Historial',      icon: <History size={18} /> },
+ { href: '/historial',        label: 'Historial',      icon: <History size={18} /> },
+  { href: '/importar',         label: 'Importar PDF',   icon: <Upload size={18} /> },
   { href: '/usuarios',         label: 'Usuarios',       icon: <Users size={18} />, adminOnly: true },
   { href: '/configuracion',    label: 'Configuración',  icon: <Settings size={18} />, adminOnly: true },
 ]
