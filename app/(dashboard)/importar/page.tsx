@@ -1,4 +1,4 @@
-'use client'
+      'use client'
 
 import { useState, useEffect } from 'react'
 import { Upload, FileText, AlertCircle, Trash2, Plus } from 'lucide-react'
@@ -22,10 +22,11 @@ export default function ImportarPDFPage() {
   const [listDate, setListDate] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [items, setItems] = useState<ParsedItem[]>([])
+  const [rawText, setRawText] = useState('')
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [step, setStep] = useState<'upload' | 'preview'>('upload')
+  const [step, setStep] = useState<'upload' | 'rawtext' | 'preview'>('upload')
 
   useEffect(() => {
     fetch('/api/proveedores')
@@ -46,11 +47,12 @@ export default function ImportarPDFPage() {
       const res = await fetch('/api/import-pdf', { method: 'POST', body: formData })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
+      setRawText(data.rawText || '')
       setItems(data.items.map((item: ParsedItem) => ({
         ...item,
         hasError: !item.originalName || item.costPrice <= 0
       })))
-      setStep('preview')
+      setStep('rawtext')
     } catch (e: any) {
       setError(e.message || 'Error al procesar el PDF')
     } finally {
@@ -94,6 +96,53 @@ export default function ImportarPDFPage() {
 
   const ivaLabels = { NONE: 'Sin IVA', TEN_FIVE: '10.5%', TWENTY_ONE: '21%' }
 
+  // PASO: TEXTO CRUDO
+  if (step === 'rawtext') return (
+    <div style={{ padding: '1rem' }}>
+      <h1 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+        Texto extraído del PDF
+      </h1>
+      <p style={{ color: 'hsl(220 15% 45%)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+        Esto es lo que el sistema leyó del PDF. Revisá las primeras líneas y contale al desarrollador el formato para mejorar el parser.
+      </p>
+
+      <div style={{ background: 'white', border: '1px solid hsl(220 15% 88%)', borderRadius: 12, padding: '1rem', marginBottom: '1rem' }}>
+        <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'hsl(220 15% 40%)', marginBottom: 8 }}>
+          Primeras 50 líneas del texto extraído:
+        </p>
+        <pre style={{
+          fontSize: '0.75rem',
+          fontFamily: 'monospace',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all',
+          color: 'hsl(220 20% 25%)',
+          background: 'hsl(220 15% 97%)',
+          padding: '0.75rem',
+          borderRadius: 8,
+          maxHeight: 400,
+          overflowY: 'auto',
+          lineHeight: 1.6,
+        }}>
+          {rawText.split('\n').slice(0, 50).join('\n')}
+        </pre>
+      </div>
+
+      <div style={{ background: 'hsl(221 89% 97%)', border: '1px solid hsl(221 89% 85%)', borderRadius: 10, padding: '0.875rem 1rem', marginBottom: '1rem', fontSize: '0.85rem', color: 'hsl(221 89% 35%)' }}>
+        <strong>Parser detectó:</strong> {items.length} productos · {items.filter(i => !i.hasError).length} válidos · {items.filter(i => i.isDuplicate).length} duplicados
+      </div>
+
+      <div style={{ display: 'flex', gap: 10 }}>
+        <button onClick={() => setStep('upload')} style={{ padding: '8px 20px', border: '1.5px solid hsl(220 15% 80%)', borderRadius: 8, background: 'white', cursor: 'pointer', fontSize: '0.875rem', fontFamily: 'inherit' }}>
+          ← Volver
+        </button>
+        <button onClick={() => setStep('preview')} style={{ padding: '8px 20px', background: 'hsl(221 89% 54%)', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500, fontFamily: 'inherit' }}>
+          Ver vista previa →
+        </button>
+      </div>
+    </div>
+  )
+
+  // PASO: VISTA PREVIA
   if (step === 'preview') return (
     <div style={{ padding: '1rem' }}>
       <h1 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '0.5rem' }}>
@@ -162,8 +211,8 @@ export default function ImportarPDFPage() {
           <Plus size={15} /> Agregar fila
         </button>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
-          <button onClick={() => setStep('upload')} style={{ padding: '8px 20px', border: '1.5px solid hsl(220 15% 80%)', borderRadius: 8, background: 'white', cursor: 'pointer', fontSize: '0.875rem', fontFamily: 'inherit' }}>
-            Cancelar
+          <button onClick={() => setStep('rawtext')} style={{ padding: '8px 20px', border: '1.5px solid hsl(220 15% 80%)', borderRadius: 8, background: 'white', cursor: 'pointer', fontSize: '0.875rem', fontFamily: 'inherit' }}>
+            ← Volver
           </button>
           <button onClick={handleSave} disabled={saving} style={{ padding: '8px 20px', background: saving ? 'hsl(220 10% 70%)' : 'hsl(221 89% 54%)', color: 'white', border: 'none', borderRadius: 8, cursor: saving ? 'not-allowed' : 'pointer', fontSize: '0.875rem', fontWeight: 500, fontFamily: 'inherit' }}>
             {saving ? 'Guardando...' : `Confirmar (${items.filter(i => !i.hasError).length} items)`}
@@ -173,6 +222,7 @@ export default function ImportarPDFPage() {
     </div>
   )
 
+  // PASO: SUBIDA
   return (
     <div style={{ maxWidth: 560, padding: '1rem' }}>
       <h1 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '0.25rem' }}>Importar lista desde PDF</h1>
@@ -223,4 +273,4 @@ export default function ImportarPDFPage() {
       </div>
     </div>
   )
-  }
+}
