@@ -22,7 +22,7 @@ export default function ImportarExcelPage() {
 
   setCargando(true)
   setResultado(null)
-
+  }
   try {
     const formData = new FormData()
     formData.append('file', archivo)
