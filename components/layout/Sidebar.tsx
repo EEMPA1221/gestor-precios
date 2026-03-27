@@ -104,14 +104,7 @@ export default function Sidebar({ role }: { role: UserRole }) {
                 color: active ? 'white' : 'rgba(255,255,255,0.55)',
                 background: active ? 'rgba(255,255,255,0.1)' : 'transparent',
                 transition: 'all 0.15s',
-              }}
-              onMouseEnter={e => {
-                if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'
-              }}
-              onMouseLeave={e => {
-                if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'
-              }}
-            >
+              }}>
               <span style={{ opacity: active ? 1 : 0.7 }}>{item.icon}</span>
               {item.label}
             </Link>
