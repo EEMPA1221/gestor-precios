@@ -18,13 +18,34 @@ export default function ImportarExcelPage() {
   }
 
   const handleSubir = async () => {
-    if (!archivo) return
-    setCargando(true)
-    // TODO: implementar subida
-    setTimeout(() => {
-      setCargando(false)
-      setResultado('Archivo recibido: ' + archivo.name)
-    }, 1000)
+  const handleSubir = async () => {
+  if (!archivo) return
+
+  setCargando(true)
+  setResultado(null)
+
+  try {
+    const formData = new FormData()
+    formData.append('file', archivo)
+
+    const res = await fetch('/api/import-excel', {
+      method: 'POST',
+      body: formData,
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Error al procesar el Excel')
+    }
+
+    setResultado(`Se procesaron ${data.items?.length ?? 0} productos correctamente`)
+    console.log('Productos importados:', data.items)
+
+  } catch (error: any) {
+    setResultado(`Error: ${error.message}`)
+  } finally {
+    setCargando(false)
   }
 
   return (
