@@ -39,7 +39,7 @@ export default function SimuladorPage() {
   }, [search, items])
 
   async function fetchLists() {
-    const res = await fetch('/api/listas?status=ACTIVE')
+    const res = await fetch('/api/listas')
     const data = await res.json()
     setLists(data.map((l: any) => ({
       id: l.id,
